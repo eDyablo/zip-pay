@@ -1,4 +1,4 @@
-version: '2.0'
+version: '3.0'
 services:
   api:
     build: api
@@ -6,3 +6,19 @@ services:
       - 80
     ports:
       - 8080:80
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  db:
