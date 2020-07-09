@@ -2,6 +2,8 @@ version: '3.0'
 services:
   api:
     build: api
+    depends_on:
+      - db
     expose:
       - 80
     ports:
