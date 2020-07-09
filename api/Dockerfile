@@ -19,6 +19,7 @@ RUN dotnet publish main/api.csproj --configuration Release --output artifacts --
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
 WORKDIR /application
+
 COPY --from=build-image /application/artifacts .
 
 EXPOSE 80
