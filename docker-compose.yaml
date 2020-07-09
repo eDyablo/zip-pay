@@ -1,0 +1,8 @@
+version: '2.0'
+services:
+  api:
+    build: api
+    expose:
+      - 80
+    ports:
+      - 8080:80
