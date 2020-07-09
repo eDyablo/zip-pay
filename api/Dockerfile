@@ -2,11 +2,19 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-image
 
 WORKDIR /application
 
-COPY *.csproj ./
-RUN dotnet restore
+COPY main/api.csproj main/
+RUN dotnet restore main/api.csproj
 
-COPY . .
-RUN dotnet publish --configuration Release --output artifacts --no-restore
+COPY test/api-test.csproj test/
+RUN dotnet restore test/api-test.csproj
+
+COPY main main
+RUN dotnet build main/api.csproj --no-restore
+
+COPY test test
+RUN dotnet test test/api-test.csproj --no-restore
+
+RUN dotnet publish main/api.csproj --configuration Release --output artifacts --no-restore 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 
