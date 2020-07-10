@@ -9,18 +9,13 @@ services:
     ports:
       - 8080:80
   db:
-    image: mysql
+    image: postgres
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
-    expose:
-      - 3306
-    ports:
-      - 3306:3306
+      POSTGRES_DB: 'database'
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'password'
     volumes:
-      - db:/var/lib/mysql
+      - db:/var/lib/postgresql/data/
 volumes:
   db:

@@ -22,13 +22,15 @@ namespace api
 
     public IConfiguration Configuration { get; }
 
-      // This method gets called by the runtime. Use this method to add services to the container.
+    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
+      services.AddTransient<Database>(
+        _ => new Database("Host=db; Username=user; Password=password; Database=database"));
     }
 
-      // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
