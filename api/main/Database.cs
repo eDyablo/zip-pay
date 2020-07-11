@@ -70,5 +70,20 @@ namespace ZipPay.Api {
         };
       }
     }
+
+    public IEnumerable<UserRecord> GetUserById(int id) {
+      using var command = new NpgsqlCommand(
+        $"SELECT id, name, email, salary, expenses FROM users WHERE id = {id}", connection);
+      using var reader = command.ExecuteReader();
+      while (reader.Read()) {
+        yield return new UserRecord {
+          Id = reader.GetInt32(0),
+          Name = reader.GetString(1),
+          Mail = reader.GetString(2),
+          Salary = reader.GetFloat(3),
+          Expenses = reader.GetFloat(4)
+        };
+      }
+    }
   }
 }

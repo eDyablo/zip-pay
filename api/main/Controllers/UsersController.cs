@@ -19,6 +19,11 @@ namespace ZipPay.Api.Controllers {
       return database.GetAllUsers();
     }
 
+    [HttpGet("{id}")]
+    public ActionResult<UserRecord> Get(int id) {
+      return Ok(database.GetUserById(id));
+    }
+
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public IActionResult Post([FromBody]CreateUserRequest request) {
