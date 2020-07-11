@@ -1,8 +1,8 @@
-using api.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using ZipPay.Api.Models;
 
-namespace api {
+namespace ZipPay.Api.Controllers {
   [ApiController]
   [Route("[controller]")]
   public class AccountsController : ControllerBase {

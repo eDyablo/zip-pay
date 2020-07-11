@@ -1,4 +1,4 @@
-namespace api.Models {
+namespace ZipPay.Api.Models {
   public class CreateAccountRequest {
     public string Name { get; set; }
 

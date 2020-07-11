@@ -1,9 +1,7 @@
 using System;
 
-namespace api
-{
-  public class WeatherForecast
-  {
+namespace ZipPay.Api.Models {
+  public class WeatherForecast {
     public DateTime Date { get; set; }
 
     public int TemperatureC { get; set; }

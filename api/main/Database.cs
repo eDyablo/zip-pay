@@ -1,8 +1,7 @@
 using Npgsql;
 using System;
 
-namespace api
-{
+namespace ZipPay {
   public class Database : IDisposable {
     NpgsqlConnection connection;
     public readonly string Version;
