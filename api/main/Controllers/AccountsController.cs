@@ -1,4 +1,6 @@
+using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace api {
   [ApiController]
@@ -13,6 +15,14 @@ namespace api {
     [HttpGet]
     public string Get() {
       return database.Version;
+    }
+
+    [HttpPost]
+    public string Post([FromBody] CreateAccountRequest request) {
+      var answer = new StringBuilder();
+      answer.AppendLine($"name: {request.Name}");
+      answer.AppendLine($"user: {request.User}");
+      return answer.ToString();
     }
   }
 }
