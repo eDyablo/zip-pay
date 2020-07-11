@@ -1,7 +1,9 @@
 using Npgsql;
 using System;
+using System.Collections.Generic;
+using ZipPay.Api.Models;
 
-namespace ZipPay {
+namespace ZipPay.Api {
   public class Database : IDisposable {
     NpgsqlConnection connection;
     public readonly string Version;
@@ -32,12 +34,41 @@ namespace ZipPay {
       connection.Close();
     }
 
-    private object ExecuteScalar(string command) {
-      return new NpgsqlCommand(command, connection).ExecuteScalar();
+    private object ExecuteScalar(string clause) {
+      using var command = new NpgsqlCommand(clause, connection);
+      return command.ExecuteScalar();
     }
 
-    private void ExecuteNonQuery(string command) {
-      new NpgsqlCommand(command, connection).ExecuteNonQuery();
+    private void ExecuteNonQuery(string clause) {
+      using var command = new NpgsqlCommand(clause, connection);
+      command.ExecuteNonQuery();
+    }
+
+    public void CreateUser(CreateUserRequest request) {
+      using var command = new NpgsqlCommand(
+        @"INSERT INTO users(name, email, salary, expenses) VALUES(@name, @email, @salary, @expenses)",
+        connection);
+      command.Parameters.AddWithValue("name", request.Name);
+      command.Parameters.AddWithValue("email", request.Mail);
+      command.Parameters.AddWithValue("salary", request.Salary);
+      command.Parameters.AddWithValue("expenses", request.Expenses);
+      command.Prepare();
+      command.ExecuteNonQuery();
+    }
+
+    public IEnumerable<UserRecord> GetAllUsers() {
+      using var command = new NpgsqlCommand(
+        "SELECT id, name, email, salary, expenses FROM users", connection);
+      using var reader = command.ExecuteReader();
+      while (reader.Read()) {
+        yield return new UserRecord {
+          Id = reader.GetInt32(0),
+          Name = reader.GetString(1),
+          Mail = reader.GetString(2),
+          Salary = reader.GetFloat(3),
+          Expenses = reader.GetFloat(4)
+        };
+      }
     }
   }
 }
