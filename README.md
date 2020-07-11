@@ -14,8 +14,7 @@ This should be implemented with an API and database.
 ### Tech stack requirements
 - API: Your choice!
 - DB: Your choice!
-- We'd recommend using docker/docker-compose to stand this up, but if you'd like to use something
-else, that's okay too
+- We'd recommend using docker/docker-compose to stand this up, but if you'd like to use something else, that's okay too
 
 ### API requirements
 1. The following Endpoints are required:
