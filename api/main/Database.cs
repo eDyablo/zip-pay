@@ -44,16 +44,17 @@ namespace ZipPay.Api {
       command.ExecuteNonQuery();
     }
 
-    public void CreateUser(CreateUserRequest request) {
-      using var command = new NpgsqlCommand(
-        @"INSERT INTO users(name, email, salary, expenses) VALUES(@name, @email, @salary, @expenses)",
-        connection);
+    public int CreateUser(CreateUserRequest request) {
+      using var command = new NpgsqlCommand(@"
+        |INSERT INTO users(name, email, salary, expenses)
+        |VALUES(@name, @email, @salary, @expenses)
+        |RETURNING id".StripMargin(), connection);
       command.Parameters.AddWithValue("name", request.Name);
       command.Parameters.AddWithValue("email", request.Mail);
       command.Parameters.AddWithValue("salary", request.Salary);
       command.Parameters.AddWithValue("expenses", request.Expenses);
       command.Prepare();
-      command.ExecuteNonQuery();
+      return Convert.ToInt32(command.ExecuteScalar());
     }
 
     public IEnumerable<UserRecord> GetAllUsers() {
@@ -101,14 +102,15 @@ namespace ZipPay.Api {
       }
     }
 
-    public void CreateAccount(CreateAccountRequest request) {
-      using var command = new NpgsqlCommand(
-        @"INSERT INTO accounts(name, user_id) VALUES(@name, @user_id)",
-        connection);
+    public int CreateAccount(CreateAccountRequest request) {
+      using var command = new NpgsqlCommand(@"
+        |INSERT INTO accounts(name, user_id)
+        |VALUES(@name, @user_id)
+        |RETURNING id".StripMargin(), connection);
       command.Parameters.AddWithValue("name", request.Name);
       command.Parameters.AddWithValue("user_id", request.UserId);
       command.Prepare();
-      command.ExecuteNonQuery();
+      return Convert.ToInt32(command.ExecuteScalar());
     }
 
     public IEnumerable<AccountRecord> GetUserAccounts(int userId) {
