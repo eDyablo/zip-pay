@@ -5,7 +5,7 @@ using ZipPay.Api.Models;
 
 namespace ZipPay.Api {
   public interface Database {
-    int CreateUser(CreateUserRequest request);
+    UserRecord CreateUser(CreateUserRequest request);
 
     IEnumerable<UserRecord> GetAllUsers();
 

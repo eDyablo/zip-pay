@@ -44,7 +44,7 @@ namespace ZipPay.Api {
       command.ExecuteNonQuery();
     }
 
-    public int CreateUser(CreateUserRequest request) {
+    public UserRecord CreateUser(CreateUserRequest request) {
       using var command = new NpgsqlCommand(@"
         |INSERT INTO users(name, email, salary, expenses)
         |VALUES(@name, @email, @salary, @expenses)
@@ -54,7 +54,13 @@ namespace ZipPay.Api {
       command.Parameters.AddWithValue("salary", request.Salary);
       command.Parameters.AddWithValue("expenses", request.Expenses);
       command.Prepare();
-      return Convert.ToInt32(command.ExecuteScalar());
+      return new UserRecord {
+        Id = Convert.ToInt32(command.ExecuteScalar()),
+        Name = request.Name,
+        Mail = request.Mail,
+        Salary = request.Salary,
+        Expenses = request.Expenses
+      };
     }
 
     public IEnumerable<UserRecord> GetAllUsers() {
