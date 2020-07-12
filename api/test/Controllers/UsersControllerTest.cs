@@ -88,5 +88,35 @@ namespace ZipPay.Test.Controllers {
       Assert.That((result as StatusCodeResult).StatusCode,
         Is.EqualTo(StatusCodes.Status404NotFound));
     }
+
+    [Test]
+    public void CreateAccount_returns_uprocessable_entity_status_code_when_user_can_not_create_account() {
+      // Arrange
+      var user = Mock.Of<UserRecord>();
+      Mock.Get(user).SetupGet(u => u.CanCreateAccount).Returns(false);
+      Mock.Get(database).Setup(d => d.GetUserById(It.IsAny<int>())).Returns(user);
+      // Act
+      var result = controller.CreateAccount(0, new CreateAccountRequest());
+      // Assert
+      Assert.That(result, Is.InstanceOf<StatusCodeResult>());
+      Assert.That((result as StatusCodeResult).StatusCode,
+        Is.EqualTo(StatusCodes.Status422UnprocessableEntity));
+    }
+
+    [Test]
+    public void CreateAccount_returns_created_account_record_when_user_can_create_account() {
+      // Arrange
+      var user = Mock.Of<UserRecord>();
+      Mock.Get(user).SetupGet(u => u.CanCreateAccount).Returns(true);
+      Mock.Get(database).Setup(d => d.GetUserById(It.IsAny<int>())).Returns(user);
+      var account = Mock.Of<AccountRecord>();
+      Mock.Get(database).Setup(d => d.CreateAccount(It.IsAny<CreateAccountRequest>()))
+        .Returns(account);
+      // Act
+      var result = controller.CreateAccount(0, new CreateAccountRequest());
+      // Assert
+      Assert.That(result, Is.InstanceOf<CreatedResult>());
+      Assert.That((result as CreatedResult).Value, Is.SameAs(account));
+    }
   }
 }

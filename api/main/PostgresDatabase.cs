@@ -108,7 +108,7 @@ namespace ZipPay.Api {
       }
     }
 
-    public int CreateAccount(CreateAccountRequest request) {
+    public AccountRecord CreateAccount(CreateAccountRequest request) {
       using var command = new NpgsqlCommand(@"
         |INSERT INTO accounts(name, user_id)
         |VALUES(@name, @user_id)
@@ -116,7 +116,11 @@ namespace ZipPay.Api {
       command.Parameters.AddWithValue("name", request.Name);
       command.Parameters.AddWithValue("user_id", request.UserId);
       command.Prepare();
-      return Convert.ToInt32(command.ExecuteScalar());
+      return new AccountRecord {
+        Id = Convert.ToInt32(command.ExecuteScalar()),
+        Name = request.Name,
+        UserId = request.UserId
+      };
     }
 
     public IEnumerable<AccountRecord> GetUserAccounts(int userId) {

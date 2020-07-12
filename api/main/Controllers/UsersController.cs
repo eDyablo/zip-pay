@@ -26,6 +26,7 @@ namespace ZipPay.Api.Controllers {
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public IActionResult Create([FromBody]CreateUserRequest request) {
       if (!request.IsValid) {
@@ -44,14 +45,18 @@ namespace ZipPay.Api.Controllers {
 
     [HttpPost("{id}/accounts")]
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public IActionResult CreateAccount(int id, [FromBody]CreateAccountRequest request) {
       var user = database.GetUserById(id);
       if (user == null) {
         return StatusCode(StatusCodes.Status404NotFound);
       }
+      if (!user.CanCreateAccount) {
+        return StatusCode(StatusCodes.Status422UnprocessableEntity);
+      }
       request.UserId = id;
-      database.CreateAccount(request);
-      return Created("accounts", request);
+      return Created("accounts", database.CreateAccount(request));
     }
   }
 }

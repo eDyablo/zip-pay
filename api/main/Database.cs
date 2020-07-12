@@ -13,7 +13,7 @@ namespace ZipPay.Api {
 
     IEnumerable<AccountRecord> GetAllAccounts();
 
-    int CreateAccount(CreateAccountRequest request);
+    AccountRecord CreateAccount(CreateAccountRequest request);
 
     IEnumerable<AccountRecord> GetUserAccounts(int userId);
 
