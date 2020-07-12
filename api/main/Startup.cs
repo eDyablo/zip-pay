@@ -24,7 +24,7 @@ namespace ZipPay.Api {
     public void ConfigureServices(IServiceCollection services) {
       services.AddControllers();
       services.AddTransient<Database>(
-        _ => new Database("Host=db; Username=user; Password=password; Database=database"));
+        _ => new PostgresDatabase("Host=db; Username=user; Password=password; Database=database"));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
