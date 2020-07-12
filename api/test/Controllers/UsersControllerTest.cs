@@ -18,36 +18,36 @@ namespace ZipPay.Test.Controllers {
     }
 
     [Test]
-    public void Create_returns_uprocessable_entity_status_code_when_request_is_invalid() {
+    public void CreateUser_returns_uprocessable_entity_status_code_when_request_is_invalid() {
       // Arrange
       var request = Mock.Of<CreateUserRequest>();
       Mock.Get(request).SetupGet(r => r.IsValid).Returns(false);
       // Act
-      var result = controller.Create(request) as StatusCodeResult;
+      var result = controller.CreateUser(request) as StatusCodeResult;
       // Assert
       Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status422UnprocessableEntity));
     }
 
     [Test]
-    public void Create_returns_created_user_record_when_request_is_valid() {
+    public void CreateUser_returns_created_user_record_when_request_is_valid() {
       // Arrange
       var request = Mock.Of<CreateUserRequest>();
       Mock.Get(request).SetupGet(r => r.IsValid).Returns(true);
       var record = new UserRecord();
       Mock.Get(database).Setup(d => d.CreateUser(request)).Returns(record);
       // Act
-      var result = controller.Create(request) as CreatedResult;
+      var result = controller.CreateUser(request) as CreatedResult;
       // Assert
       Assert.That(result, Is.Not.Null);
       Assert.That(result.Value, Is.SameAs(record));
     }
 
     [Test]
-    public void Create_returns_conflict_status_code_when_email_is_already_exist() {
+    public void CreateUser_returns_conflict_status_code_when_email_is_already_exist() {
       // Arrage
       Mock.Get(database).Setup(d => d.HasMailAddress("existent email")).Returns(true);
       // Act
-      var result = controller.Create(new CreateUserRequest{
+      var result = controller.CreateUser(new CreateUserRequest{
         Name = "name",
         Mail = "existent email",
         Salary = 1,
@@ -58,7 +58,7 @@ namespace ZipPay.Test.Controllers {
     }
 
     [Test]
-    public void Create_returns_created_user_record_when_email_does_not_exists() {
+    public void CreateUser_returns_created_user_record_when_email_does_not_exists() {
       // Arrage
       var request = new CreateUserRequest{
         Name = "name",
@@ -71,7 +71,7 @@ namespace ZipPay.Test.Controllers {
       var record = new UserRecord();
       Mock.Get(database).Setup(d => d.CreateUser(request)).Returns(record);
       // Act
-      var result = controller.Create(request) as CreatedResult;
+      var result = controller.CreateUser(request) as CreatedResult;
       // Assert
       Assert.That(result, Is.Not.Null);
       Assert.That(result.Value, Is.SameAs(record));

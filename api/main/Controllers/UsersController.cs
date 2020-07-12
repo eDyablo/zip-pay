@@ -15,12 +15,12 @@ namespace ZipPay.Api.Controllers {
     }
 
     [HttpGet]
-    public IEnumerable<UserRecord> Get() {
+    public IEnumerable<UserRecord> GetUsers() {
       return database.GetAllUsers();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<UserRecord> Get(int id) {
+    public ActionResult<UserRecord> GetUser(int id) {
       return Ok(database.GetUserById(id));
     }
 
@@ -28,7 +28,7 @@ namespace ZipPay.Api.Controllers {
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public IActionResult Create([FromBody]CreateUserRequest request) {
+    public IActionResult CreateUser([FromBody]CreateUserRequest request) {
       if (!request.IsValid) {
         return StatusCode(StatusCodes.Status422UnprocessableEntity);
       }
