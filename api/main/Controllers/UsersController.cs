@@ -45,6 +45,10 @@ namespace ZipPay.Api.Controllers {
     [HttpPost("{id}/accounts")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public IActionResult CreateAccount(int id, [FromBody]CreateAccountRequest request) {
+      var user = database.GetUserById(id);
+      if (user == null) {
+        return StatusCode(StatusCodes.Status404NotFound);
+      }
       request.UserId = id;
       database.CreateAccount(request);
       return Created("accounts", request);

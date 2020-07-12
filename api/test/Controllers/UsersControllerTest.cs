@@ -76,5 +76,17 @@ namespace ZipPay.Test.Controllers {
       Assert.That(result, Is.Not.Null);
       Assert.That(result.Value, Is.SameAs(record));
     }
+
+    [Test]
+    public void CreateAccount_returns_not_found_status_code_when_specified_user_id_does_not_exist() {
+      // Arrange
+      Mock.Get(database).Setup(d => d.GetUserById(It.IsAny<int>())).Returns<UserRecord>(null);
+      // Act
+      var result = controller.CreateAccount(0, new CreateAccountRequest());
+      // Assert
+      Assert.That(result, Is.InstanceOf<StatusCodeResult>());
+      Assert.That((result as StatusCodeResult).StatusCode,
+        Is.EqualTo(StatusCodes.Status404NotFound));
+    }
   }
 }
