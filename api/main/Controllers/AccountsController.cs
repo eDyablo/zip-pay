@@ -14,7 +14,7 @@ namespace ZipPay.Api.Controllers {
     }
 
     [HttpGet]
-    public IEnumerable<AccountRecord> Get() {
+    public IEnumerable<AccountRecord> GetAccounts() {
       return database.GetAllAccounts();
     }
   }
