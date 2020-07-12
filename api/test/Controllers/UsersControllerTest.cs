@@ -23,9 +23,11 @@ namespace ZipPay.Test.Controllers {
       var request = Mock.Of<CreateUserRequest>();
       Mock.Get(request).SetupGet(r => r.IsValid).Returns(false);
       // Act
-      var result = controller.CreateUser(request) as StatusCodeResult;
+      var result = controller.CreateUser(request);
       // Assert
-      Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status422UnprocessableEntity));
+      Assert.That(result, Is.InstanceOf<ObjectResult>());
+      Assert.That((result as ObjectResult).StatusCode,
+        Is.EqualTo(StatusCodes.Status422UnprocessableEntity));
     }
 
     [Test]
@@ -33,13 +35,13 @@ namespace ZipPay.Test.Controllers {
       // Arrange
       var request = Mock.Of<CreateUserRequest>();
       Mock.Get(request).SetupGet(r => r.IsValid).Returns(true);
-      var record = new UserRecord();
+      var record = Mock.Of<UserRecord>();
       Mock.Get(database).Setup(d => d.CreateUser(request)).Returns(record);
       // Act
-      var result = controller.CreateUser(request) as CreatedResult;
+      var result = controller.CreateUser(request);
       // Assert
-      Assert.That(result, Is.Not.Null);
-      Assert.That(result.Value, Is.SameAs(record));
+      Assert.That(result, Is.InstanceOf<CreatedResult>());
+      Assert.That((result as CreatedResult).Value, Is.SameAs(record));
     }
 
     [Test]
@@ -52,9 +54,11 @@ namespace ZipPay.Test.Controllers {
         Mail = "existent email",
         Salary = 1,
         Expenses = 1
-      }) as StatusCodeResult;
+      });
       // Assert
-      Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status409Conflict));
+      Assert.That(result, Is.InstanceOf<ObjectResult>());
+      Assert.That((result as ObjectResult).StatusCode,
+        Is.EqualTo(StatusCodes.Status409Conflict));
     }
 
     [Test]
@@ -68,13 +72,13 @@ namespace ZipPay.Test.Controllers {
       };
       Mock.Get(database).Setup(d => d.HasMailAddress(It.IsAny<string>())).Returns(true);
       Mock.Get(database).Setup(d => d.HasMailAddress("new email")).Returns(false);
-      var record = new UserRecord();
+      var record = Mock.Of<UserRecord>();
       Mock.Get(database).Setup(d => d.CreateUser(request)).Returns(record);
       // Act
-      var result = controller.CreateUser(request) as CreatedResult;
+      var result = controller.CreateUser(request);
       // Assert
-      Assert.That(result, Is.Not.Null);
-      Assert.That(result.Value, Is.SameAs(record));
+      Assert.That(result, Is.InstanceOf<CreatedResult>());
+      Assert.That((result as CreatedResult).Value, Is.SameAs(record));
     }
 
     [Test]
@@ -82,10 +86,10 @@ namespace ZipPay.Test.Controllers {
       // Arrange
       Mock.Get(database).Setup(d => d.GetUserById(It.IsAny<int>())).Returns<UserRecord>(null);
       // Act
-      var result = controller.CreateAccount(0, new CreateAccountRequest());
+      var result = controller.CreateAccount(0, Mock.Of<CreateAccountRequest>());
       // Assert
-      Assert.That(result, Is.InstanceOf<StatusCodeResult>());
-      Assert.That((result as StatusCodeResult).StatusCode,
+      Assert.That(result, Is.InstanceOf<ObjectResult>());
+      Assert.That((result as ObjectResult).StatusCode,
         Is.EqualTo(StatusCodes.Status404NotFound));
     }
 
@@ -96,10 +100,10 @@ namespace ZipPay.Test.Controllers {
       Mock.Get(user).SetupGet(u => u.CanCreateAccount).Returns(false);
       Mock.Get(database).Setup(d => d.GetUserById(It.IsAny<int>())).Returns(user);
       // Act
-      var result = controller.CreateAccount(0, new CreateAccountRequest());
+      var result = controller.CreateAccount(0, Mock.Of<CreateAccountRequest>());
       // Assert
-      Assert.That(result, Is.InstanceOf<StatusCodeResult>());
-      Assert.That((result as StatusCodeResult).StatusCode,
+      Assert.That(result, Is.InstanceOf<ObjectResult>());
+      Assert.That((result as ObjectResult).StatusCode,
         Is.EqualTo(StatusCodes.Status422UnprocessableEntity));
     }
 
@@ -113,7 +117,7 @@ namespace ZipPay.Test.Controllers {
       Mock.Get(database).Setup(d => d.CreateAccount(It.IsAny<CreateAccountRequest>()))
         .Returns(account);
       // Act
-      var result = controller.CreateAccount(0, new CreateAccountRequest());
+      var result = controller.CreateAccount(0, Mock.Of<CreateAccountRequest>());
       // Assert
       Assert.That(result, Is.InstanceOf<CreatedResult>());
       Assert.That((result as CreatedResult).Value, Is.SameAs(account));
