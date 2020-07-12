@@ -34,8 +34,7 @@ namespace ZipPay.Api.Controllers {
       if (database.HasMailAddress(request.Mail)) {
         return StatusCode(StatusCodes.Status409Conflict);
       }
-      var record = database.CreateUser(request);
-      return Created("users", record);
+      return Created("users", database.CreateUser(request));
     }
 
     [HttpGet("{id}/accounts")]
