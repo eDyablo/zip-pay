@@ -123,5 +123,12 @@ namespace ZipPay.Api {
         };
       }
     }
+
+    public bool HasMailAddress(string address) {
+      using var command = new NpgsqlCommand(
+        $"SELECT id FROM users WHERE email = '{address}'", connection);
+      using var reader = command.ExecuteReader();
+      return reader.Read();
+    }
   }
 }
