@@ -9,5 +9,9 @@ namespace ZipPay.Api.Models {
     public float Salary { get; set; }
 
     public float Expenses { get; set; }
+
+    public virtual bool CanCreateAccount { get {
+      return Salary - Expenses >= 1000;
+    } }
   }
 }
