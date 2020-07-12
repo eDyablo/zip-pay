@@ -71,17 +71,55 @@ namespace ZipPay.Api {
       }
     }
 
-    public IEnumerable<UserRecord> GetUserById(int id) {
+    public UserRecord GetUserById(int id) {
       using var command = new NpgsqlCommand(
         $"SELECT id, name, email, salary, expenses FROM users WHERE id = {id}", connection);
       using var reader = command.ExecuteReader();
-      while (reader.Read()) {
-        yield return new UserRecord {
+      if (reader.Read()) {
+        return new UserRecord {
           Id = reader.GetInt32(0),
           Name = reader.GetString(1),
           Mail = reader.GetString(2),
           Salary = reader.GetFloat(3),
           Expenses = reader.GetFloat(4)
+        };
+      } else {
+        return null;
+      }
+    }
+
+    public IEnumerable<AccountRecord> GetAllAccounts() {
+      using var command = new NpgsqlCommand(
+        "SELECT id, user_id, name FROM accounts", connection);
+      using var reader = command.ExecuteReader();
+      while (reader.Read()) {
+        yield return new AccountRecord {
+          Id = reader.GetInt32(0),
+          UserId = reader.GetInt32(1),
+          Name = reader.GetString(2),
+        };
+      }
+    }
+
+    public void CreateAccount(CreateAccountRequest request) {
+      using var command = new NpgsqlCommand(
+        @"INSERT INTO accounts(name, user_id) VALUES(@name, @user_id)",
+        connection);
+      command.Parameters.AddWithValue("name", request.Name);
+      command.Parameters.AddWithValue("user_id", request.UserId);
+      command.Prepare();
+      command.ExecuteNonQuery();
+    }
+
+    public IEnumerable<AccountRecord> GetUserAccounts(int userId) {
+      using var command = new NpgsqlCommand(
+        $"SELECT id, user_id, name FROM accounts WHERE user_id = {userId}", connection);
+      using var reader = command.ExecuteReader();
+      while (reader.Read()) {
+        yield return new AccountRecord {
+          Id = reader.GetInt32(0),
+          UserId = reader.GetInt32(1),
+          Name = reader.GetString(2),
         };
       }
     }

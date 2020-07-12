@@ -30,5 +30,18 @@ namespace ZipPay.Api.Controllers {
       database.CreateUser(request);
       return Created("users", request);
     }
+
+    [HttpGet("{id}/accounts")]
+    public IEnumerable<AccountRecord> GetAccounts(int id) {
+      return database.GetUserAccounts(id);
+    }
+
+    [HttpPost("{id}/accounts")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public IActionResult PostAccount(int id, [FromBody]CreateAccountRequest request) {
+      request.UserId = id;
+      database.CreateAccount(request);
+      return Created("accounts", request);
+    }
   }
 }

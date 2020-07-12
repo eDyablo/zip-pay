@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Text;
 using ZipPay.Api.Models;
 
@@ -13,16 +14,8 @@ namespace ZipPay.Api.Controllers {
     }
 
     [HttpGet]
-    public string Get() {
-      return database.Version;
-    }
-
-    [HttpPost]
-    public string Post([FromBody] CreateAccountRequest request) {
-      var answer = new StringBuilder();
-      answer.AppendLine($"name: {request.Name}");
-      answer.AppendLine($"user: {request.User}");
-      return answer.ToString();
+    public IEnumerable<AccountRecord> Get() {
+      return database.GetAllAccounts();
     }
   }
 }
