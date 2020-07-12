@@ -50,6 +50,11 @@ namespace ZipPay.Api.Controllers {
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public IActionResult CreateAccount(int id, [FromBody]CreateAccountRequest request) {
+      request.UserId = id;
+      if (!request.IsValid) {
+        return StatusCode(StatusCodes.Status422UnprocessableEntity,
+          new { reason = "specified account data is not valid", data = request });
+      }
       var user = database.GetUserById(id);
       if (user == null) {
         return StatusCode(StatusCodes.Status404NotFound,
@@ -57,9 +62,8 @@ namespace ZipPay.Api.Controllers {
       }
       if (!user.CanCreateAccount) {
         return StatusCode(StatusCodes.Status422UnprocessableEntity,
-          new { reason = "specified account data is not valid", data = request });
+          new { reason = "can not create account for the user", user = user });
       }
-      request.UserId = id;
       return Created("accounts", database.CreateAccount(request));
     }
   }
