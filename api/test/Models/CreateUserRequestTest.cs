@@ -14,8 +14,8 @@ namespace ZipPay.Test.Models {
       var request = new CreateUserRequest {
         Name = "name",
         Mail = "mail",
-        Salary = 0,
-        Expenses = 0
+        Salary = 1,
+        Expenses = 1
       };
       Assert.That(request.IsValid, Is.True);
     }
@@ -29,8 +29,8 @@ namespace ZipPay.Test.Models {
       var request = new CreateUserRequest {
         Name = name,
         Mail = "mail",
-        Salary = 0,
-        Expenses = 0
+        Salary = 1,
+        Expenses = 1
       };
       Assert.That(request.IsValid, Is.False);
     }
@@ -44,13 +44,13 @@ namespace ZipPay.Test.Models {
       var request = new CreateUserRequest {
         Name = "name",
         Mail = mail,
-        Salary = 0,
-        Expenses = 0
+        Salary = 1,
+        Expenses = 1
       };
       Assert.That(request.IsValid, Is.False);
     }
 
-    [TestCase(0, true)]
+    [TestCase(0, false)]
     [TestCase(1, true)]
     [TestCase(-1, false)]
     public void IsValid_checks_salary(int salary, bool valid) {
@@ -58,19 +58,19 @@ namespace ZipPay.Test.Models {
         Name = "name",
         Mail = "mail",
         Salary = salary,
-        Expenses = 0
+        Expenses = 1
       };
       Assert.That(request.IsValid, Is.EqualTo(valid));
     }
 
-    [TestCase(0, true)]
+    [TestCase(0, false)]
     [TestCase(1, true)]
     [TestCase(-1, false)]
     public void IsValid_checks_expenses(int expenses, bool valid) {
       var request = new CreateUserRequest {
         Name = "name",
         Mail = "mail",
-        Salary = 0,
+        Salary = 1,
         Expenses = expenses
       };
       Assert.That(request.IsValid, Is.EqualTo(valid));

@@ -49,7 +49,9 @@ namespace ZipPay.Test.Controllers {
       // Act
       var result = controller.Create(new CreateUserRequest{
         Name = "name",
-        Mail = "existent email"
+        Mail = "existent email",
+        Salary = 1,
+        Expenses = 1
       }) as StatusCodeResult;
       // Assert
       Assert.That(result.StatusCode, Is.EqualTo(StatusCodes.Status409Conflict));
@@ -60,7 +62,9 @@ namespace ZipPay.Test.Controllers {
       // Arrage
       var request = new CreateUserRequest{
         Name = "name",
-        Mail = "new email"
+        Mail = "new email",
+        Salary = 1,
+        Expenses = 1
       };
       Mock.Get(database).Setup(d => d.HasMailAddress(It.IsAny<string>())).Returns(true);
       Mock.Get(database).Setup(d => d.HasMailAddress("new email")).Returns(false);

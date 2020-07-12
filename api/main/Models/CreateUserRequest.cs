@@ -11,8 +11,8 @@ namespace ZipPay.Api.Models {
     public virtual bool IsValid { get {
       return !string.IsNullOrWhiteSpace(Name)
         && !string.IsNullOrWhiteSpace(Mail)
-        && Salary >= 0
-        && Expenses >= 0;
+        && Salary > 0
+        && Expenses > 0;
     } }
   }
 }
