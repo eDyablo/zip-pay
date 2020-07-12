@@ -31,6 +31,9 @@ namespace ZipPay.Api.Controllers {
       if (!request.IsValid) {
         return StatusCode(StatusCodes.Status422UnprocessableEntity);
       }
+      if (database.HasMailAddress(request.Mail)) {
+        return StatusCode(StatusCodes.Status409Conflict);
+      }
       var record = database.CreateUser(request);
       return Created("users", record);
     }
