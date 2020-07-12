@@ -36,3 +36,41 @@ This should be implemented with an API and database.
 
 ### Database requirements
 1. Users and accounts should persist to a database of your choice
+
+### Build and Up
+Use Docker and Docker compose tools.
+
+From repository root run the following command to build the solution.
+```
+docker-compose build
+```
+
+From repository root run either of the next command to up the services.
+```
+docker-compose up
+```
+```
+docker-compose up --detach
+```
+You can do build and up in one command
+```
+docker-compose up --build
+```
+```
+docker-compose up -build --detach
+```
+
+The application exp
+
+### Interaction
+
+Once you've build and up the application you can access its following endpoints.
+
+|endpoint | kind |usage |
+|---------|------|------|
+http://host:8080/users            | GET  | List all users
+http://host:8080/users            | POST | Create a user
+http://host:8080/accounts         | GET  | List all accounts
+http://host:8080/users/1          | GET  | Get account with id 1
+http://host:8080/users/1/accounts | GET  | Get accounts belong to the user
+http://host:8080/users/1/accounts | POST | Create an account for the user
