@@ -138,7 +138,6 @@ namespace ZipPay.Test.Controllers {
       // Act
       var result = controller.CreateAccount(0, request);
       // Assert
-      // Assert
       Assert.That(result, Is.InstanceOf<ObjectResult>());
       Assert.That((result as ObjectResult).StatusCode,
         Is.EqualTo(StatusCodes.Status422UnprocessableEntity));
