@@ -7,5 +7,12 @@ namespace ZipPay.Api.Models {
     public float Salary { get; set; }
 
     public float Expenses { get; set; }
+
+    public bool IsValid { get {
+      return !string.IsNullOrWhiteSpace(Name)
+        && !string.IsNullOrWhiteSpace(Mail)
+        && Salary >= 0
+        && Expenses >= 0;
+    } }
   }
 }
